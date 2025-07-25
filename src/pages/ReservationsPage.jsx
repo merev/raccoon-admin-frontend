@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { fetchReservations, deleteReservation } from "../api/reservations";
+import {
+  fetchReservations,
+  deleteReservation,
+  updateReservationStatus,
+} from "../api/reservations";
 
 export default function ReservationsPage() {
   const [reservations, setReservations] = useState([]);
@@ -21,6 +25,11 @@ export default function ReservationsPage() {
       await deleteReservation(id);
       loadData();
     }
+  };
+
+  const handleStatusChange = async (id, newStatus) => {
+    await updateReservationStatus(id, newStatus);
+    loadData(); // refresh table after update
   };
 
   return (
@@ -48,7 +57,16 @@ export default function ReservationsPage() {
                 <td>{r.phone}</td>
                 <td>{r.date}</td>
                 <td>{r.time}</td>
-                <td>{r.status}</td>
+                <td>
+                  <select
+                    value={r.status}
+                    onChange={(e) => handleStatusChange(r.id, e.target.value)}
+                  >
+                    <option value="pending">Pending</option>
+                    <option value="completed">Completed</option>
+                    <option value="declined">Declined</option>
+                  </select>
+                </td>
                 <td>
                   <button className="delete" onClick={() => handleDelete(r.id)}>
                     Delete
