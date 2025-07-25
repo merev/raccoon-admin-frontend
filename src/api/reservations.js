@@ -11,3 +11,10 @@ export const deleteReservation = async (id) => {
   const res = await axios.delete(`${API_BASE}/admin/reservations/${id}`);
   return res.data;
 };
+
+export const updateReservationStatus = async (id, status) => {
+  const res = await axios.patch(`${API_BASE}/admin/reservations/${id}`, {
+    status,
+  });
+  return res.data;
+};
