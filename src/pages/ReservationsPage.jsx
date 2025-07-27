@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   fetchReservations,
   deleteReservation,
@@ -23,7 +23,7 @@ export default function ReservationsPage() {
     dateTo: "",
   });
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
   setLoading(true);
   try {
     // Prepare query parameters
@@ -42,11 +42,11 @@ export default function ReservationsPage() {
   } finally {
     setLoading(false);
   }
-  };
+  }, [filters, page]);
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
 
   const handleDelete = async (id) => {
     if (confirm("Delete this reservation?")) {
