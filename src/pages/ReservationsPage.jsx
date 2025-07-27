@@ -7,6 +7,19 @@ import {
 
 import "./Reservations.css";
 
+const [selectedReservation, setSelectedReservation] = useState(null);
+const [isModalOpen, setIsModalOpen] = useState(false);
+
+const openModal = (reservation) => {
+  setSelectedReservation(reservation);
+  setIsModalOpen(true);
+};
+
+const closeModal = () => {
+  setIsModalOpen(false);
+  setSelectedReservation(null);
+};
+
 export default function ReservationsPage() {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -100,6 +113,103 @@ export default function ReservationsPage() {
   // No need to call loadData here - the useEffect will trigger it
 };
 
+const ReservationDetailsModal = () => (
+  <div className={`modal ${isModalOpen ? 'open' : ''}`}>
+    <div className="modal-content">
+      <span className="close" onClick={closeModal}>&times;</span>
+      {selectedReservation && (
+        <div className="reservation-details">
+          <h2>Reservation Details</h2>
+          
+          <div className="details-grid">
+            <div className="detail-item">
+              <strong>Name:</strong>
+              <span>{selectedReservation.name}</span>
+            </div>
+            <div className="detail-item">
+              <strong>Email:</strong>
+              <span>{selectedReservation.email}</span>
+            </div>
+            <div className="detail-item">
+              <strong>Phone:</strong>
+              <span>{selectedReservation.phone}</span>
+            </div>
+            <div className="detail-item">
+              <strong>Address:</strong>
+              <span>{selectedReservation.address}</span>
+            </div>
+            <div className="detail-item">
+              <strong>Date:</strong>
+              <span>{selectedReservation.date}</span>
+            </div>
+            <div className="detail-item">
+              <strong>Time:</strong>
+              <span>{selectedReservation.time}</span>
+            </div>
+            <div className="detail-item">
+              <strong>Status:</strong>
+              <span className={`status-${selectedReservation.status.toLowerCase()}`}>
+                {selectedReservation.status}
+              </span>
+            </div>
+            <div className="detail-item">
+              <strong>Flat Type:</strong>
+              <span>{selectedReservation.flat_type}</span>
+            </div>
+            <div className="detail-item">
+              <strong>Plan:</strong>
+              <span>{selectedReservation.plan || 'Custom'}</span>
+            </div>
+            <div className="detail-item">
+              <strong>Total Price:</strong>
+              <span>{selectedReservation.total_price} лв</span>
+            </div>
+            {selectedReservation.info && (
+              <div className="detail-item full-width">
+                <strong>Additional Info:</strong>
+                <p>{selectedReservation.info}</p>
+              </div>
+            )}
+            {selectedReservation.activities?.length > 0 && (
+              <div className="detail-item full-width">
+                <strong>Activities:</strong>
+                <ul>
+                  {selectedReservation.activities.map((activity, index) => (
+                    <li key={index}>{activity}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+          
+          <div className="modal-actions">
+            <button 
+              className="status-button"
+              onClick={() => {
+                handleStatusChange(selectedReservation.id, 'confirmed');
+                closeModal();
+              }}
+              disabled={selectedReservation.status === 'confirmed'}
+            >
+              Confirm
+            </button>
+            <button 
+              className="status-button decline"
+              onClick={() => {
+                handleStatusChange(selectedReservation.id, 'declined');
+                closeModal();
+              }}
+              disabled={selectedReservation.status === 'declined'}
+            >
+              Decline
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+);
+
   return (
     <div className="container">
       <h1>Reservations</h1>
@@ -182,7 +292,16 @@ export default function ReservationsPage() {
                   </select>
                 </td>
                 <td>
-                  <button className="delete" onClick={() => handleDelete(r.id)}>
+                  <button 
+                    className="view-button"
+                    onClick={() => openModal(r)}
+                  >
+                    View Details
+                  </button>
+                  <button 
+                    className="delete-button"
+                    onClick={() => handleDelete(r.id)}
+                  >
                     Delete
                   </button>
                 </td>
@@ -209,6 +328,7 @@ export default function ReservationsPage() {
     </div>
         </>
       )}
+      <ReservationDetailsModal />
     </div>
   );
 }
