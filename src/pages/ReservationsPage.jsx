@@ -5,6 +5,8 @@ import {
   updateReservationStatus,
 } from "../api/reservations";
 
+import "./Reservations.css";
+
 export default function ReservationsPage() {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,18 +19,24 @@ export default function ReservationsPage() {
   });
 
   const loadData = async () => {
-    setLoading(true);
+  setLoading(true);
+  try {
+    // Prepare query parameters
     const queryParams = {
-      ...filters,
+      name: filters.name || undefined,
+      status: filters.status || undefined,
       date_from: filters.dateFrom || undefined,
       date_to: filters.dateTo || undefined,
     };
-    delete queryParams.dateFrom;
-    delete queryParams.dateTo;
 
-    const data = await fetchReservations();
+    const data = await fetchReservations(queryParams);
     setReservations(data);
+  } catch (error) {
+    console.error("Error fetching reservations:", error);
+    // Optionally show error to user
+  } finally {
     setLoading(false);
+  }
   };
 
   useEffect(() => {
@@ -56,11 +64,21 @@ export default function ReservationsPage() {
     loadData();
   };
 
+  const handleResetFilters = () => {
+  setFilters({
+    name: "",
+    status: "",
+    dateFrom: "",
+    dateTo: "",
+  });
+  // No need to call loadData here - the useEffect will trigger it
+};
+
   return (
     <div className="container">
       <h1>Reservations</h1>
       <button className="refresh" onClick={loadData}>🔄 Refresh</button>
-      <form onSubmit={handleSearch} style={{ marginBottom: "20px" }}>
+      <form onSubmit={handleSearch} style={{ marginBottom: "20px", display: "flex", gap: "10px", flexWrap: "wrap" }}>
         <input
           type="text"
           name="name"
@@ -79,19 +97,30 @@ export default function ReservationsPage() {
           <option value="declined">Declined</option>
           <option value="completed">Completed</option>
         </select>
-        <input
-          type="date"
-          name="dateFrom"
-          value={filters.dateFrom}
-          onChange={handleInputChange}
-        />
-        <input
-          type="date"
-          name="dateTo"
-          value={filters.dateTo}
-          onChange={handleInputChange}
-        />
-        <button type="submit">🔍 Filter</button>
+        <div style={{ display: "flex", gap: "5px" }}>
+          <input
+            type="date"
+            name="dateFrom"
+            value={filters.dateFrom}
+            onChange={handleInputChange}
+            placeholder="From date"
+          />
+          <input
+            type="date"
+            name="dateTo"
+            value={filters.dateTo}
+            onChange={handleInputChange}
+            placeholder="To date"
+          />
+        </div>
+        <button type="submit" className="search-button">🔍 Filter</button>
+        <button 
+          type="button" 
+          onClick={handleResetFilters}
+          className="reset-button"
+        >
+          ❌ Clear
+        </button>
       </form>
       {loading ? (
         <p>Loading...</p>
