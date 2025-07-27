@@ -10,11 +10,11 @@ import "./Reservations.css";
 export default function ReservationsPage() {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [pagination, setPagination] = useState({
-    page: 1,
-    per_page: 10,
-    total: 0
-  });
+
+  const [page, setPage] = useState(1);
+  const limit = 10;
+   const nextPage = () => setPage((p) => p + 1);
+  const prevPage = () => setPage((p) => Math.max(1, p - 1));
 
   const [filters, setFilters] = useState({
     name: "",
@@ -23,49 +23,26 @@ export default function ReservationsPage() {
     dateTo: "",
   });
 
-  const loadData = async (page = 1) => {
-    setLoading(true);
-    try {
-      const queryParams = {
-        ...filters,
-        date_from: filters.dateFrom || undefined,
-        date_to: filters.dateTo || undefined,
-        page,
-        per_page: pagination.per_page
-      };
+  const loadData = async () => {
+  setLoading(true);
+  try {
+    // Prepare query parameters
+    const queryParams = {
+      name: filters.name || undefined,
+      status: filters.status || undefined,
+      date_from: filters.dateFrom || undefined,
+      date_to: filters.dateTo || undefined,
+    };
 
-      const data = await fetchReservations(queryParams);
-      setReservations(data.results); // Assuming your API returns {results, total}
-      setPagination(prev => ({
-        ...prev,
-        page,
-        total: data.total
-      }));
-    } catch (error) {
-      console.error("Error fetching reservations:", error);
-    } finally {
-      setLoading(false);
-    }
+    const data = await fetchReservations(queryParams);
+    setReservations(data);
+  } catch (error) {
+    console.error("Error fetching reservations:", error);
+    // Optionally show error to user
+  } finally {
+    setLoading(false);
+  }
   };
-
-    // Add pagination controls
-  const PaginationControls = () => (
-    <div className="pagination">
-      <button 
-        onClick={() => loadData(pagination.page - 1)}
-        disabled={pagination.page === 1}
-      >
-        Previous
-      </button>
-      <span>Page {pagination.page} of {Math.ceil(pagination.total / pagination.per_page)}</span>
-      <button 
-        onClick={() => loadData(pagination.page + 1)}
-        disabled={pagination.page * pagination.per_page >= pagination.total}
-      >
-        Next
-      </button>
-    </div>
-  );
 
   useEffect(() => {
     loadData();
@@ -153,6 +130,7 @@ export default function ReservationsPage() {
       {loading ? (
         <p>Loading...</p>
       ) : (
+        <>
         <table>
           <thead>
             <tr>
@@ -191,8 +169,13 @@ export default function ReservationsPage() {
             ))}
           </tbody>
         </table>
+        <div style={{ marginTop: "20px" }}>
+            <button onClick={prevPage} disabled={page === 1}>⬅ Previous</button>
+            <span style={{ margin: "0 10px" }}>Page {page}</span>
+            <button onClick={nextPage} disabled={reservations.length < limit}>Next ➡</button>
+        </div>
+        </>
       )}
-      <PaginationControls />
     </div>
   );
 }
