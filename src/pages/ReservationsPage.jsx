@@ -7,22 +7,22 @@ import {
 
 import "./Reservations.css";
 
-const [selectedReservation, setSelectedReservation] = useState(null);
-const [isModalOpen, setIsModalOpen] = useState(false);
-
-const openModal = (reservation) => {
-  setSelectedReservation(reservation);
-  setIsModalOpen(true);
-};
-
-const closeModal = () => {
-  setIsModalOpen(false);
-  setSelectedReservation(null);
-};
-
 export default function ReservationsPage() {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [selectedReservation, setSelectedReservation] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = (reservation) => {
+    setSelectedReservation(reservation);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedReservation(null);
+  };
 
   const [pagination, setPagination] = useState({
     page: 1,
