@@ -11,10 +11,11 @@ export default function ReservationsPage() {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [page, setPage] = useState(1);
-  const limit = 10;
-   const nextPage = () => setPage((p) => p + 1);
-  const prevPage = () => setPage((p) => Math.max(1, p - 1));
+  const [pagination, setPagination] = useState({
+    page: 1,
+    per_page: 10,
+    total: 0
+  });
 
   const [filters, setFilters] = useState({
     name: "",
@@ -24,29 +25,45 @@ export default function ReservationsPage() {
   });
 
   const loadData = useCallback(async () => {
-  setLoading(true);
-  try {
-    // Prepare query parameters
-    const queryParams = {
-      name: filters.name || undefined,
-      status: filters.status || undefined,
-      date_from: filters.dateFrom || undefined,
-      date_to: filters.dateTo || undefined,
-    };
+    setLoading(true);
+    try {
+      const response = await fetchReservations({
+        ...filters,
+        date_from: filters.dateFrom || undefined,
+        date_to: filters.dateTo || undefined,
+        page: pagination.page,
+        per_page: pagination.per_page
+      });
 
-    const data = await fetchReservations(queryParams);
-    setReservations(data);
-  } catch (error) {
-    console.error("Error fetching reservations:", error);
-    // Optionally show error to user
-  } finally {
-    setLoading(false);
-  }
-  }, [filters, page]);
+      setReservations(response.results);
+      setPagination(prev => ({
+        ...prev,
+        total: response.total
+      }));
+    } catch (error) {
+      console.error("Error fetching reservations:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [filters, pagination.page, pagination.per_page]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  const nextPage = () => {
+  const totalPages = Math.ceil(pagination.total / pagination.per_page);
+    if (pagination.page < totalPages) {
+      setPagination(prev => ({ ...prev, page: prev.page + 1 }));
+    }
+  };
+
+  const prevPage = () => {
+    if (pagination.page > 1) {
+      setPagination(prev => ({ ...prev, page: prev.page - 1 }));
+    }
+  };
+
 
   const handleDelete = async (id) => {
     if (confirm("Delete this reservation?")) {
@@ -66,8 +83,12 @@ export default function ReservationsPage() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    loadData();
+    setPagination(prev => ({ ...prev, page: 1 }));
   };
+
+   // Update your pagination controls in the JSX:
+  const totalPages = Math.ceil(pagination.total / pagination.per_page);
+
 
   const handleResetFilters = () => {
   setFilters({
@@ -170,10 +191,22 @@ export default function ReservationsPage() {
           </tbody>
         </table>
         <div style={{ marginTop: "20px" }}>
-            <button onClick={prevPage} disabled={page === 1}>⬅ Previous</button>
-            <span style={{ margin: "0 10px" }}>Page {page}</span>
-            <button onClick={nextPage} disabled={reservations.length < limit}>Next ➡</button>
-        </div>
+      <button 
+        onClick={prevPage} 
+        disabled={pagination.page === 1}
+      >
+        ⬅ Previous
+      </button>
+      <span style={{ margin: "0 10px" }}>
+        Page {pagination.page} of {totalPages}
+      </span>
+      <button 
+        onClick={nextPage} 
+        disabled={pagination.page >= totalPages}
+      >
+        Next ➡
+      </button>
+    </div>
         </>
       )}
     </div>

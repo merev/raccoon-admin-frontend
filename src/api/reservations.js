@@ -3,18 +3,25 @@ import axios from "axios";
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
 export const fetchReservations = async (params = {}) => {
-  const cleanParams = Object.fromEntries(
-    Object.entries(params).filter(([_, v]) => v !== undefined && v !== '')
-  );
+  // Clean params and ensure pagination values are numbers
+  const cleanParams = {
+    ...Object.fromEntries(
+      Object.entries(params).filter(([_, v]) => v !== undefined && v !== '')
+    ),
+    page: Number(params.page) || 1,
+    per_page: Number(params.per_page) || 10
+  };
   
   const res = await axios.get(`${API_BASE}/admin/reservations`, { 
-    params: {
-      ...cleanParams,
-      page: params.page || 1,
-      per_page: params.per_page || 10
-    }
+    params: cleanParams
   });
-  return res.data;
+  
+  return {
+    results: res.data.data,
+    total: res.data.total,
+    page: res.data.page,
+    per_page: res.data.per_page
+  };
 };
 
 export const deleteReservation = async (id) => {
