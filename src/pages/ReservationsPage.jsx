@@ -208,12 +208,6 @@ const ReservationDetailsModal = React.memo(() => (
               </button>
             </div>
           )}
-
-          <div 
-            className={`modal ${isModalOpen ? 'open' : ''}`}
-            onKeyDown={(e) => e.key === 'Escape' && closeModal()}
-            tabIndex={0}
-          />
           
           <div className="modal-actions">
             <button 
