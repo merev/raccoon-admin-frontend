@@ -131,6 +131,10 @@ const ReservationDetailsModal = () => (
               <strong>Created At:</strong>
               <span>{new Date(selectedReservation.created_at).toLocaleString()}</span>
             </div>
+             <div className="detail-item">
+              <strong>Service Type:</strong>
+              <span>{selectedReservation.service_type}</span>
+            </div>
             <div className="detail-item">
               <strong>Name:</strong>
               <span>{selectedReservation.name}</span>
@@ -292,6 +296,7 @@ const ReservationDetailsModal = () => (
           <thead>
             <tr>
               <th>Created At ↓</th>
+              <th>Service</th>
               <th>Name</th>
               <th>Phone</th>
               <th>Date</th>
@@ -305,6 +310,7 @@ const ReservationDetailsModal = () => (
             {reservations.map((r) => (
               <tr key={r.id}>
                 <td>{new Date(r.created_at).toLocaleString()}</td>
+                <td>{r.service_type}</td>
                 <td>{r.name}</td>
                 <td>{r.phone}</td>
                 <td>{r.date}</td>
