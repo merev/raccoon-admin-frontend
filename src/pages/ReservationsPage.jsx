@@ -120,12 +120,15 @@ const ReservationDetailsModal = () => (
       {selectedReservation && (
         <div className="reservation-details">
           <h2>Reservation Details</h2>
-          
-          <div className="details-grid">
+            <div className="details-grid">
             <div className="detail-item">
-            <strong>Created At:</strong>
-            <span>{new Date(selectedReservation.created_at).toLocaleString()}</span>
-          </div>
+              <strong>ID:</strong>
+              <span>{selectedReservation.id}</span>
+            </div>
+            <div className="detail-item">
+              <strong>Created At:</strong>
+              <span>{new Date(selectedReservation.created_at).toLocaleString()}</span>
+            </div>
             <div className="detail-item">
               <strong>Name:</strong>
               <span>{selectedReservation.name}</span>
@@ -159,6 +162,10 @@ const ReservationDetailsModal = () => (
             <div className="detail-item">
               <strong>Flat Type:</strong>
               <span>{selectedReservation.flat_type}</span>
+            </div>
+            <div className="detail-item">
+              <strong>Subscription:</strong>
+              <span>{selectedReservation.subscription}</span>
             </div>
             <div className="detail-item">
               <strong>Plan:</strong>
