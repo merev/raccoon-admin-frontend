@@ -252,9 +252,9 @@ const ReservationDetailsModal = () => (
           onChange={handleInputChange}
         >
           <option value="">All subscriptions</option>
-          <option value="single">Еднократно</option>
-          <option value="weekly">Седмично</option>
-          <option value="monthly">Месечно</option>
+          <option value="Еднократно">Еднократно</option>
+          <option value="Седмично">Седмично</option>
+          <option value="Месечно">Месечно</option>
         </select>
         <div style={{ display: "flex", gap: "5px" }}>
           <input
