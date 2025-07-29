@@ -123,6 +123,10 @@ const ReservationDetailsModal = () => (
           
           <div className="details-grid">
             <div className="detail-item">
+            <strong>Created At:</strong>
+            <span>{new Date(selectedReservation.created_at).toLocaleString()}</span>
+          </div>
+            <div className="detail-item">
               <strong>Name:</strong>
               <span>{selectedReservation.name}</span>
             </div>
@@ -265,6 +269,7 @@ const ReservationDetailsModal = () => (
         <table>
           <thead>
             <tr>
+              <th>Created At</th>
               <th>Name</th>
               <th>Phone</th>
               <th>Date</th>
@@ -276,6 +281,7 @@ const ReservationDetailsModal = () => (
           <tbody>
             {reservations.map((r) => (
               <tr key={r.id}>
+                <td>{new Date(r.created_at).toLocaleString()}</td>
                 <td>{r.name}</td>
                 <td>{r.phone}</td>
                 <td>{r.date}</td>
