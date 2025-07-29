@@ -251,6 +251,15 @@ const ReservationDetailsModal = () => (
           <option value="completed">Completed</option>
         </select>
         <select
+          name="service_type"
+          value={filters.service_type}
+          onChange={handleInputChange}
+        >
+          <option value="">All services</option>
+          <option value="flats">Flats</option>
+          <option value="offices">Offices</option>
+        </select>
+        <select
           name="subscription"
           value={filters.subscription}
           onChange={handleInputChange}
