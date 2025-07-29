@@ -34,6 +34,7 @@ export default function ReservationsPage() {
     name: "",
     status: "",
     subscription: "",
+    service_type: "",
     dateFrom: "",
     dateTo: "",
   });
@@ -109,6 +110,7 @@ export default function ReservationsPage() {
     name: "",
     status: "",
     subscription: "",
+    service_type: "",
     dateFrom: "",
     dateTo: "",
   });
