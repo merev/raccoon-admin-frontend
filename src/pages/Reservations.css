@@ -133,6 +133,13 @@ th {
 }
 
 /* Buttons */
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .view-button {
   background-color: #2196F3;
   color: white;

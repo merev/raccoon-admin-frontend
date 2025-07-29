@@ -291,7 +291,7 @@ const ReservationDetailsModal = () => (
         <table>
           <thead>
             <tr>
-              <th>Created At</th>
+              <th>Created At ↓</th>
               <th>Name</th>
               <th>Phone</th>
               <th>Date</th>
@@ -321,7 +321,7 @@ const ReservationDetailsModal = () => (
                     <option value="declined">Declined</option>
                   </select>
                 </td>
-                <td>
+                <td className="action-buttons">
                   <button 
                     className="view-button"
                     onClick={() => openModal(r)}
