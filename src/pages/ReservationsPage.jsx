@@ -244,6 +244,16 @@ const ReservationDetailsModal = () => (
           <option value="declined">Declined</option>
           <option value="completed">Completed</option>
         </select>
+        <select
+          name="subscription"
+          value={filters.subscription}
+          onChange={handleInputChange}
+        >
+          <option value="">All subscriptions</option>
+          <option value="single">Еднократно</option>
+          <option value="weekly">Седмично</option>
+          <option value="monthly">Месечно</option>
+        </select>
         <div style={{ display: "flex", gap: "5px" }}>
           <input
             type="date"
@@ -281,6 +291,7 @@ const ReservationDetailsModal = () => (
               <th>Phone</th>
               <th>Date</th>
               <th>Time</th>
+              <th>Subscription</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
@@ -293,6 +304,7 @@ const ReservationDetailsModal = () => (
                 <td>{r.phone}</td>
                 <td>{r.date}</td>
                 <td>{r.time}</td>
+                <td>{r.subscription}</td>
                 <td>
                   <select
                     value={r.status}
