@@ -285,6 +285,9 @@ const ReservationDetailsModal = () => (
         <p>Loading...</p>
       ) : (
         <>
+        <p>
+          Showing {reservations.length} of {pagination.total} reservations
+        </p>
         <table>
           <thead>
             <tr>
