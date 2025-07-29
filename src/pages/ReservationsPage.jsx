@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   fetchReservations,
   deleteReservation,
@@ -85,22 +85,9 @@ export default function ReservationsPage() {
     }
   };
 
-  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
-
-  const [modalError, setModalError] = useState(null);
-
   const handleStatusChange = async (id, newStatus) => {
-    setModalError(null);
-    setIsUpdatingStatus(true);
-    try {
-      await updateReservationStatus(id, newStatus);
-      loadData();
-      closeModal();
-    } catch (error) {
-      setModalError('Failed to update status. Please try again.');
-    } finally {
-      setIsUpdatingStatus(false);
-    }
+    await updateReservationStatus(id, newStatus);
+    loadData(); // refresh table after update
   };
 
   const handleInputChange = (e) => {
@@ -126,7 +113,7 @@ export default function ReservationsPage() {
   // No need to call loadData here - the useEffect will trigger it
 };
 
-const ReservationDetailsModal = React.memo(() => (
+const ReservationDetailsModal = () => (
   <div className={`modal ${isModalOpen ? 'open' : ''}`}>
     <div className="modal-content">
       <span className="close" onClick={closeModal}>&times;</span>
@@ -194,20 +181,6 @@ const ReservationDetailsModal = React.memo(() => (
               </div>
             )}
           </div>
-
-          {modalError && (
-            <div className="modal-error">
-              <span className="error-icon">⚠️</span>
-              {modalError}
-              <button 
-                className="dismiss-error" 
-                onClick={() => setModalError(null)}
-                aria-label="Dismiss error"
-              >
-                &times;
-              </button>
-            </div>
-          )}
           
           <div className="modal-actions">
             <button 
@@ -216,9 +189,8 @@ const ReservationDetailsModal = React.memo(() => (
                 handleStatusChange(selectedReservation.id, 'confirmed');
                 closeModal();
               }}
-              disabled={selectedReservation.status === 'confirmed' || isUpdatingStatus}
+              disabled={selectedReservation.status === 'confirmed'}
             >
-              {isUpdatingStatus ? 'Processing...' : 'Confirm'}
               Confirm
             </button>
             <button 
@@ -236,7 +208,7 @@ const ReservationDetailsModal = React.memo(() => (
       )}
     </div>
   </div>
-));
+);
 
   return (
     <div className="container">
