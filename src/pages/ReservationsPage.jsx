@@ -33,6 +33,7 @@ export default function ReservationsPage() {
   const [filters, setFilters] = useState({
     name: "",
     status: "",
+    subscription: "",
     dateFrom: "",
     dateTo: "",
   });
@@ -107,6 +108,7 @@ export default function ReservationsPage() {
   setFilters({
     name: "",
     status: "",
+    subscription: "",
     dateFrom: "",
     dateTo: "",
   });
