@@ -326,7 +326,7 @@ const ReservationDetailsModal = () => (
                     className="view-button"
                     onClick={() => openModal(r)}
                   >
-                    View Details
+                    Details
                   </button>
                   <button 
                     className="delete-button"
